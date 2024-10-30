@@ -83,6 +83,18 @@ try:
 except CarboneError as e:
     print(f'Error: {e}')
 ```
+## Test
+### Install development dependencies
+pip install -e .[dev]
+
+### Run tests
+pytest
+
+### Run tests with coverage report
+pytest --cov=carbone_connect --cov-report=term-missing
+
+### Run specific test
+pytest tests/test_client.py -k test_initialization
 
 ## License
 
