@@ -1,0 +1,10 @@
+build
+twine
+wheel
+setuptools>=42
+pytest
+pytest-cov
+black
+isort
+mypy
+flake8
