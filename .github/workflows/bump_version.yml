@@ -1,4 +1,4 @@
-name: Bump Version
+name: Bump Version and Release
 
 on:
   workflow_dispatch:
@@ -14,13 +14,16 @@ on:
           - major
 
 permissions:
-  contents: write # Add this line to grant write permissions
+  contents: write
 
 jobs:
   bump-version:
     runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.get_version.outputs.version }}
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
       with:
         fetch-depth: 0
         token: ${{ secrets.GITHUB_TOKEN }}
@@ -44,9 +47,40 @@ jobs:
       run: |
         bump2version ${{ github.event.inputs.version_type }}
     
+    - name: Get new version
+      id: get_version
+      run: |
+        version=$(grep "current_version = " .bumpversion.cfg | cut -d= -f2 | tr -d ' ')
+        echo "version=$version" >> $GITHUB_OUTPUT
+    
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
         tags: true
+
+  create-release:
+    needs: bump-version
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+        ref: main  # Ensure we're on the main branch
+    
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ needs.bump-version.outputs.new_version }}
+        release_name: Release v${{ needs.bump-version.outputs.new_version }}
+        body: |
+          Release version ${{ needs.bump-version.outputs.new_version }}
+          
+          Changes in this release:
+          - Version bump: ${{ github.event.inputs.version_type }}
+        draft: true  # Create as draft
+        prerelease: false
