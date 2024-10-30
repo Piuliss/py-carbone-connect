@@ -6,7 +6,7 @@ with open("README.md", encoding="utf-8") as f:
 
 setup(
   name="py-carbone-connect",
-  version="1.0.0", # This will be automatically updated by bump2version
+  version="1.1.0", # This will be automatically updated by bump2version
   author="Raul B. Netto",
   author_email="raulbeni@gmail.com",
   description="A Python client for the Carbone API",
