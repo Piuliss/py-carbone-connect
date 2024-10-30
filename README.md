@@ -5,7 +5,7 @@ A Python client library for interacting with the Carbone API service. This libra
 ## Installation
 
 ```bash
-pip install requests
+pip install py-carbone-connect
 ```
 
 ## Features
