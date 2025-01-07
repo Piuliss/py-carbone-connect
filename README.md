@@ -83,6 +83,10 @@ try:
 except CarboneError as e:
     print(f'Error: {e}')
 ```
+## Run CarboneConnect via Docker
+```
+docker run -d --name carbone -p 3030:3030 fleebzz/carbone
+```
 ## Test
 ### Install development dependencies
 pip install -e .[dev]
